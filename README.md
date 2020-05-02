@@ -1,6 +1,6 @@
 #Convert Gregorian to Persian Calander
 
-Convert Gregorian date to Persian Calander in C language
+Convert Gregorian date to Persian Calander using C language
 
 
 ## Download
