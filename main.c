@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	
 	ShamsiDate Date;
 	
-	Date=MiladiToShamsi(2,5,2092);
+	Date=MiladiToShamsi(3,5,2020);
 	
 	printf("%d,%d,%d\r\n",Date.iYear,Date.iMonth,Date.iDay);
 
@@ -35,7 +35,7 @@ ShamsiDate MiladiToShamsi(int iMiladiDay,int iMiladiMonth,int iMiladiYear)
 	int  dayCount,farvardinDayDiff,deyDayDiff ;
 	int  sumDayMiladiMonth[] = {0,31,59,90,120,151,181,212,243,273,304,334};
 	int  sumDayMiladiMonthLeap[]= {0,31,60,91,121,152,182,213,244,274,305,335};
-	ShamsiDate  ShamsiDate;
+	ShamsiDate  shamsiDate;
 	 
 	farvardinDayDiff=79;
 	 
@@ -107,10 +107,10 @@ ShamsiDate MiladiToShamsi(int iMiladiDay,int iMiladiMonth,int iMiladiYear)
 		}
 		shamsiYear = iMiladiYear - 622;		 
 	}
-	ShamsiDate.iYear = shamsiYear;
-	ShamsiDate.iMonth = shamsiMonth;
-	ShamsiDate.iDay = shamsiDay;
+	shamsiDate.iYear = shamsiYear;
+	shamsiDate.iMonth = shamsiMonth;
+	shamsiDate.iDay = shamsiDay;
 	 
-	return ShamsiDate ;
+	return shamsiDate ;
 }
 
