@@ -1,116 +1,73 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct _ShamsiDate
+typedef struct
 {
-int iYear;
-int iMonth;
-int iDay;
+int Year;
+int Month;
+int Day;
 }ShamsiDate;
 
-ShamsiDate MiladiToShamsi(int iMiladiDay,int iMiladiMonth,int iMiladiYear);
+ShamsiDate GregorianToJalali(int g_y, int g_m, int g_d);
 
 int main(int argc, char *argv[]) {
 	
 	ShamsiDate Date;
 	
-	Date=MiladiToShamsi(3,5,2020);
+	Date=GregorianToJalali(2020,5,6);
 	
-	printf("%d,%d,%d\r\n",Date.iYear,Date.iMonth,Date.iDay);
+	printf("%d,%d,%d\r\n",Date.Year,Date.Month,Date.Day);
 
 	return 0;
 }
 
-char MiladiIsLeap(int miladiYear)
+ShamsiDate GregorianToJalali(int g_y, int g_m, int g_d)
 {
-	if(((miladiYear % 100)!= 0 && (miladiYear % 4) == 0) || ((miladiYear % 100)== 0 && (miladiYear % 400) == 0))
-		return 1;
-	else
-		return 0;
-}
- 
-ShamsiDate MiladiToShamsi(int iMiladiDay,int iMiladiMonth,int iMiladiYear)
-{
-	int  shamsiDay, shamsiMonth, shamsiYear;
-	int  dayCount,farvardinDayDiff,deyDayDiff ;
-	int  sumDayMiladiMonth[] = {0,31,59,90,120,151,181,212,243,273,304,334};
-	int  sumDayMiladiMonthLeap[]= {0,31,60,91,121,152,182,213,244,274,305,335};
-	ShamsiDate  shamsiDate;
-	 
-	farvardinDayDiff=79;
-	 
-	if (MiladiIsLeap(iMiladiYear))
-	{
-		dayCount = sumDayMiladiMonthLeap[iMiladiMonth-1] + iMiladiDay;
-	}
-	else
-	{
-		dayCount = sumDayMiladiMonth[iMiladiMonth-1] + iMiladiDay;
-	}
-	if((MiladiIsLeap(iMiladiYear - 1)))
-	{
-		deyDayDiff = 11;
-	}
-	else
-	{
-		deyDayDiff = 10;
-	}
-	if (dayCount > farvardinDayDiff)
-	{
-		dayCount = dayCount - farvardinDayDiff;
-		if (dayCount <= 186)
-		{
-			switch (dayCount%31)
-			{
-				case 0:
-				shamsiMonth = dayCount / 31;
-				shamsiDay = 31;
-				break;
-				default:
-				shamsiMonth = (dayCount / 31) + 1;
-				shamsiDay = (dayCount%31);
-				break;
-			}
-			shamsiYear = iMiladiYear - 621;
-		}
-		else
-		{
-			dayCount = dayCount - 186;
-			switch (dayCount%30)
-			{
-				case 0:
-				shamsiMonth = (dayCount / 30) + 6;
-				shamsiDay = 30;
-				break;
-				default:
-				shamsiMonth = (dayCount / 30) + 7;
-				shamsiDay = (dayCount%30);
-				break;
-			}
-			shamsiYear = iMiladiYear - 621;
-		}
-	}
-	else
-	{
-		dayCount = dayCount + deyDayDiff;
-		 
-		switch (dayCount%30)
-		{
-			case  0:
-			shamsiMonth = (dayCount / 30) + 9;
-			shamsiDay = 30;
-			break;
-			default:
-			shamsiMonth = (dayCount / 30) + 10;
-			shamsiDay = (dayCount%30);
-			break;
-		}
-		shamsiYear = iMiladiYear - 622;		 
-	}
-	shamsiDate.iYear = shamsiYear;
-	shamsiDate.iMonth = shamsiMonth;
-	shamsiDate.iDay = shamsiDay;
-	 
-	return shamsiDate ;
+
+int g_days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+int j_days_in_month[] = {31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29};
+
+int gy = g_y-1600;
+int gm = g_m-1;
+int gd = g_d-1;
+
+ShamsiDate Date;
+
+long int g_day_no = 365*gy;
+g_day_no+=(gy+3)/4;
+g_day_no-=(gy+99)/100;
+g_day_no+=(gy+399)/400;
+
+for (int i=0; i < gm; ++i)
+  g_day_no += g_days_in_month[i];
+if (gm>1 && ((gy%4==0 && gy%100!=0) || (gy%400==0)))
+ // leap and after Feb 
+  g_day_no++;
+g_day_no += gd;
+
+int j_day_no = g_day_no-79;
+
+int j_np = j_day_no/ 12053;
+j_day_no = j_day_no % 12053;
+
+int jy = 979+33*j_np+4*(j_day_no/1461);
+
+j_day_no %= 1461;
+
+if (j_day_no >= 366) {
+  jy += (j_day_no-1)/365;
+  j_day_no = (j_day_no-1)%365;
 }
 
+int j;
+for (j=0; j < 11 && j_day_no >= j_days_in_month[j]; ++j)
+  j_day_no -= j_days_in_month[j];
+int jm = j+1;
+int jd = j_day_no+1;
+
+Date.Day=jd;
+Date.Month=jm;
+Date.Year=jy;
+
+return Date;
+}  
