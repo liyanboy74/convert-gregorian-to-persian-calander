@@ -1,6 +1,10 @@
-#ifndef _SHD_H_
-#define _SHD_H_
+#ifndef __SHD_H__
+#define __SHD_H__
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
+   
 typedef struct
 {
 int Year;
@@ -10,4 +14,8 @@ int Day;
 
 JalaliDate GregorianToJalali(int g_y, int g_m, int g_d);
 
-#endif // _SHD_H_
+#ifdef __cplusplus
+}
+#endif
+
+#endif // __SHD_H__
